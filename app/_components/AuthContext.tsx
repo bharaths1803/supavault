@@ -15,6 +15,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then((res) => (res.ok ? res.json() : null))
       .then(setUser)
       .catch(() => setUser(null));
+
+    console.log("USer", user);
   }, []);
   return (
     <AuthContext.Provider value={{ user, setUser }}>

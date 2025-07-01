@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "@react-email/components": "^0.1.1",
+    "@supabase/supabase-js": "^2.50.2",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
@@ -19,6 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
+    "react-spinners": "^0.17.0",
     "resend": "^4.6.0"
   },
   "devDependencies": {

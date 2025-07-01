@@ -11,3 +11,13 @@ export interface UserType {
   email: string;
   id: string;
 }
+
+export interface UploadingFileType {
+  id: string;
+  status: "uploading" | "success" | "error";
+  error?: string;
+  fileFormData: FormData;
+  progress: number;
+}
+
+export type FileCategory = "images" | "videos" | "documents" | "others" | "all";

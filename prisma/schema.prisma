@@ -30,7 +30,7 @@ model File {
   name     String
   path     String
   bucket   String
-  size     String
+  size     Int
   mimeType String
 
   user    User?   @relation("OwnedFiles", fields: [ownerId], references: [id])

@@ -1,5 +1,5 @@
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  return <div className="py-20">{children}</div>;
+  return <div className="">{children}</div>;
 };
 
 export default DashboardLayout;
