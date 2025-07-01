@@ -1,7 +1,8 @@
 "use client";
 
+import { getFiles } from "@/actions/file.actions";
 import { AuthContext } from "@/app/_components/AuthContext";
-import { FileCategory } from "@/types";
+import { FileCategory, SortCriteria, SortOrder } from "@/types";
 import {
   FolderOpen,
   LogOut,
@@ -20,6 +21,7 @@ interface SidebarProps {
   setIsMobileMenuOpen: Dispatch<SetStateAction<boolean>>;
   activeCategory: FileCategory;
   setActiveCategory: Dispatch<SetStateAction<FileCategory>>;
+  userFiles: Awaited<ReturnType<typeof getFiles>>;
 }
 
 const Sidebar = ({
@@ -27,6 +29,7 @@ const Sidebar = ({
   setIsMobileMenuOpen,
   activeCategory,
   setActiveCategory,
+  userFiles,
 }: SidebarProps) => {
   const [loggingout, setLoggingout] = useState<boolean>(false);
   const { setUser, user } = useContext(AuthContext);
@@ -38,35 +41,38 @@ const Sidebar = ({
       iconColor: "text-red-600",
       label: "All Files",
       icon: FolderOpen,
-      count: 0,
+      count: userFiles.files.length,
     },
     {
       id: "images" as FileCategory,
       iconColor: "text-blue-600",
       label: "Images",
       icon: Image,
-      count: 0,
+      count: userFiles.files.filter((file) => file.category === "images")
+        .length,
     },
     {
-      id: "videos" as FileCategory,
+      id: "media" as FileCategory,
       iconColor: "text-purple-600",
-      label: "Videos",
+      label: "Media",
       icon: Video,
-      count: 0,
+      count: userFiles.files.filter((file) => file.category === "media").length,
     },
     {
       id: "documents" as FileCategory,
       iconColor: "text-green-600",
       label: "Documents",
       icon: FileText,
-      count: 0,
+      count: userFiles.files.filter((file) => file.category === "documents")
+        .length,
     },
     {
       id: "others" as FileCategory,
       iconColor: "text-orange-600",
       label: "Others",
       icon: Archive,
-      count: 0,
+      count: userFiles.files.filter((file) => file.category === "others")
+        .length,
     },
   ];
 

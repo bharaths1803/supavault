@@ -1,3 +1,9 @@
+export type FileCategory = "images" | "media" | "documents" | "others" | "all";
+
+export type SortOrder = "ascending" | "descending";
+
+export type SortCriteria = "name" | "size" | "category" | "date";
+
 export interface LoginFormType {
   email: string;
 }
@@ -20,4 +26,12 @@ export interface UploadingFileType {
   progress: number;
 }
 
-export type FileCategory = "images" | "videos" | "documents" | "others" | "all";
+export interface FileType {
+  id: string;
+  mimeType: string;
+  size: number;
+  path: string;
+  name: string;
+  createdAt: Date;
+  category: FileCategory;
+}

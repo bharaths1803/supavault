@@ -7,10 +7,11 @@ import { uploadFile } from "@/actions/file.actions";
 import UploadStatus from "./UploadStatus";
 import toast from "react-hot-toast";
 
-const FileUpload = () => {
+const FileUpload = ({ totalSize }: { totalSize: number }) => {
   const [isDraggingOver, setIsDraggingOver] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFileType[]>([]);
+  const storage = 2 * 1024 * 1024 * 1024;
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -53,7 +54,13 @@ const FileUpload = () => {
       (file) => file.size > 10 * 1024 * 1024
     ).length;
     if (largeFilesCount > 0) {
-      toast.error("One or more files exceed 10mb");
+      toast.error("One or more files exceed 10mb!");
+      return;
+    }
+
+    const totalFileSize = files.reduce((s, file) => s + file.size, 0);
+    if (totalFileSize > storage) {
+      toast.error("No storage to add files!");
       return;
     }
     setIsUploading(true);
