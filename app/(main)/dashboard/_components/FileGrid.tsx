@@ -1,6 +1,6 @@
 "use client";
 
-import { getFiles } from "@/actions/file.actions";
+import { deleteFile, getFiles } from "@/actions/file.actions";
 import { FileType } from "@/types";
 import {
   Archive,
@@ -11,15 +11,35 @@ import {
   Image,
   ImageIcon,
   Info,
+  MoreVertical,
+  Trash2,
   Video,
   VideoIcon,
 } from "lucide-react";
+import { useState } from "react";
+import DeleteModal from "./DeleteModal";
 
 interface FileGridProps {
   userFiles: Awaited<ReturnType<typeof getFiles>>;
 }
 
 const FileGrid = ({ userFiles }: FileGridProps) => {
+  const [activeDropdownFileId, setActiveDropdownFileId] = useState<string>("");
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [deleteingFileName, setDeleteingFileName] = useState<string>("");
+  const [deleteingfileId, setDeleteingFileId] = useState<string>("");
+
+  const [showFileDetailsModal, setShowFileDetailsModal] =
+    useState<boolean>(false);
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
   const getFileIcon = (file: FileType) => {
     switch (file.category) {
       case "images":
@@ -39,6 +59,10 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
     window.open(fileUrl, "_blank");
   };
 
+  const handleToggleDropDown = (fileId: string) => {
+    setActiveDropdownFileId((p) => (p === fileId ? "" : fileId));
+  };
+
   if (userFiles.files.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center text-center py-12">
@@ -56,6 +80,17 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
     );
   }
 
+  const handleCloseModal = () => {
+    setDeleteingFileName("");
+    setShowDeleteModal(false);
+  };
+
+  const handleOpenModal = (fileName: string, fileId: string) => {
+    setDeleteingFileName(fileName);
+    setDeleteingFileId(fileId);
+    setShowDeleteModal(true);
+  };
+
   return (
     <>
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -63,9 +98,9 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
           // File
           <div
             key={file.id}
-            className="bg-white rounded-lg shadow-sm hover:shadow-lg border-pink-100 hover:border-pink-200 transition-all duration-200 cursor-pointer relative group"
+            className="bg-white rounded-lg shadow-sm hover:shadow-lg border-pink-100 hover:border-pink-200 transition-all duration-200 cursor-pointer group"
           >
-            <div className="aspect-square bg-gradient-to-br from-pink-50 to-rose-50 flex justify-center items-center">
+            <div className="aspect-square bg-gradient-to-br from-pink-50 to-rose-50 flex justify-center items-center relative">
               <div className="h-full w-full flex justify-center items-center">
                 {getFileIcon(file)}
               </div>
@@ -84,10 +119,58 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
               </div>
             </div>
 
-            <p className="mt-2">{file.name}</p>
+            <div className="p-4">
+              <div className="flex justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-900 truncate">
+                  {file.name}
+                </h3>
+                <div className="relative">
+                  <button
+                    onClick={() => handleToggleDropDown(file.id)}
+                    className="p-1 rounded-full hover:bg-pink-50 transition-colors ml-2"
+                  >
+                    <MoreVertical className="text-pink-400 h-4 w-4" />
+                  </button>
+
+                  {activeDropdownFileId === file.id && (
+                    <div className="absolute right-0 top-8 bg-white border border-pink-200 py-2 z-10 min-w-[160px] rounded-lg shadow-lg">
+                      <button className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full">
+                        <Info className="h-4 w-4 text-pink-400" />
+                        <span>View Details</span>
+                      </button>
+                      <button
+                        className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full"
+                        onClick={() => handleFilePreview(file.path)}
+                      >
+                        <Eye className="h-4 w-4 text-pink-400" />
+                        <span>Preview</span>
+                      </button>
+                      <button
+                        className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full"
+                        onClick={() => handleOpenModal(file.name, file.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-pink-400" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-1 text-xs text-gray-500">
+                <p>{formatFileSize(file.size)}</p>
+                <p>{new Date(file.createdAt).toDateString()}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
+      {showDeleteModal && (
+        <DeleteModal
+          handleCloseModal={handleCloseModal}
+          fileName={deleteingFileName}
+          fileId={deleteingfileId}
+        />
+      )}
     </>
   );
 };

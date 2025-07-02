@@ -3,7 +3,7 @@
 import { getDbUserId } from "@/lib/getCurrentUser";
 import prisma from "@/lib/prisma";
 import { supabase } from "@/lib/supabase-config";
-import { categorizeFileType } from "@/lib/utils";
+import { categorizeFileType, extractSupabasePathFromUrl } from "@/lib/utils";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 
@@ -14,9 +14,9 @@ export async function uploadFile(formData: FormData) {
     if (!userId) throw new Error("User not found");
 
     const fileExtension = file.name.split(".").pop();
-    const filePath = `${userId}/${new Date()}-${randomUUID()}.${fileExtension}`;
+    const filePath = `${userId}/${randomUUID()}.${fileExtension}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("user-uploads")
       .upload(filePath, file, {
         contentType: file.type,
@@ -79,5 +79,42 @@ export async function getFiles() {
   } catch (error) {
     console.log("Error in get files action", error);
     throw new Error("Error in get files actions");
+  }
+}
+
+export async function deleteFile(fileId: string) {
+  try {
+    const userId = await getDbUserId();
+    if (!userId) throw new Error("User not found!");
+
+    const file = await prisma.file.findUnique({
+      where: {
+        ownerId: userId,
+        id: fileId,
+      },
+    });
+
+    if (!file) throw new Error("File not found!");
+
+    const relativeFilePath = extractSupabasePathFromUrl(file.path);
+
+    const { error } = await supabase.storage
+      .from("user-uploads")
+      .remove([relativeFilePath]);
+
+    if (error) throw new Error(error.message);
+
+    await prisma.file.delete({
+      where: {
+        id: fileId,
+        ownerId: userId,
+      },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.log("Error deleteing file", error);
+    return { success: false, error };
   }
 }

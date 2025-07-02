@@ -31,3 +31,13 @@ export function categorizeFileType(mimeType: string): FileCategory {
 
   return "others";
 }
+
+export function extractSupabasePathFromUrl(url: string): string {
+  try {
+    const parts = url.split("/object/public/user-uploads/");
+    if (parts.length !== 2) return "";
+    return parts[1]; // This is the path after bucket name
+  } catch {
+    return "";
+  }
+}

@@ -54,7 +54,7 @@ const UploadStatus = ({
       <div className="max-h-64 overflow-y-auto">
         {uploadingFiles.map((file) => {
           return (
-            <div key={file.id} className="p-3 border-b border-pink-50">
+            <div key={file.id} className="p-3 border-b border-pink-50 w-full">
               <div className="flex items-start space-x-3">
                 <div className="mt-1">
                   {file.status === "uploading" && (

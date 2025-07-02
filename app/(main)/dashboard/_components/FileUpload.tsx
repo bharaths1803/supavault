@@ -113,7 +113,6 @@ const FileUpload = ({ totalSize }: { totalSize: number }) => {
     <>
       <div className="p-6">
         {/* Upload Area */}
-        {isUploading && <p className="mt-3 text-gray-900">Uploading files</p>}
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
