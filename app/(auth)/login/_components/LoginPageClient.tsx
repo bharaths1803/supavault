@@ -1,7 +1,7 @@
 "use client";
 
 import { LoginFormType } from "@/types";
-import { Loader, MailIcon, UserIcon } from "lucide-react";
+import { Loader, Loader2, MailIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -92,7 +92,7 @@ const LoginPageClient = () => {
       >
         {isSubmitting ? (
           <>
-            <Loader className="h-5 w-5 animate-spin mr-1" />
+            <Loader2 className="h-5 w-5 animate-spin mr-1" />
             Logging in...
           </>
         ) : (

@@ -1,7 +1,7 @@
 "use client";
 
 import { LoginFormType, SignupFormType, UserType } from "@/types";
-import { Loader, Mail } from "lucide-react";
+import { Loader, Loader2, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -160,7 +160,7 @@ const OptPageClient = ({
       >
         {isSubmitting ? (
           <>
-            <Loader className="h-5 w-5 animate-spin mr-1" />
+            <Loader2 className="h-5 w-5 animate-spin mr-1" />
             Verifying...
           </>
         ) : (
