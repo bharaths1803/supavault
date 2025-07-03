@@ -130,7 +130,7 @@ const Sidebar = ({
               <FolderOpen className="text-white h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-lg text-gray-900 font-semibold">TidyBin</h1>
+              <h1 className="text-lg text-gray-900 font-semibold">SupaVault</h1>
               <p className="text-sm text-gray-500">Cloud Storage</p>
             </div>
           </div>

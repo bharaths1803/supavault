@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import DeleteModal from "./DeleteModal";
+import FileDetailsModal from "./FileDetailsModal";
 
 interface FileGridProps {
   userFiles: Awaited<ReturnType<typeof getFiles>>;
@@ -29,6 +30,7 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
   const [deleteingFileName, setDeleteingFileName] = useState<string>("");
   const [deleteingfileId, setDeleteingFileId] = useState<string>("");
 
+  const [fileDetails, setFileDetails] = useState<FileType | null>(null);
   const [showFileDetailsModal, setShowFileDetailsModal] =
     useState<boolean>(false);
 
@@ -80,15 +82,25 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
     );
   }
 
-  const handleCloseModal = () => {
+  const handleCloseDeleteModal = () => {
     setDeleteingFileName("");
     setShowDeleteModal(false);
   };
 
-  const handleOpenModal = (fileName: string, fileId: string) => {
+  const handleOpenDeleteModal = (fileName: string, fileId: string) => {
     setDeleteingFileName(fileName);
     setDeleteingFileId(fileId);
     setShowDeleteModal(true);
+  };
+
+  const handleCloseFileDetailsModal = () => {
+    setFileDetails(null);
+    setShowFileDetailsModal(false);
+  };
+
+  const handleOpenFileDetailsModal = (file: FileType) => {
+    setFileDetails(file);
+    setShowFileDetailsModal(true);
   };
 
   return (
@@ -113,7 +125,10 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
                 >
                   <Eye className="h-4 w-4" />
                 </button>
-                <button className="p-2 rounded-full text-pink-700 shadow-lg bg-white/90 hover:bg-white hover:scale-110 transition-all duration-200">
+                <button
+                  className="p-2 rounded-full text-pink-700 shadow-lg bg-white/90 hover:bg-white hover:scale-110 transition-all duration-200"
+                  onClick={() => handleOpenFileDetailsModal(file)}
+                >
                   <Info className="h-4 w-4" />
                 </button>
               </div>
@@ -134,7 +149,10 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
 
                   {activeDropdownFileId === file.id && (
                     <div className="absolute right-0 top-8 bg-white border border-pink-200 py-2 z-10 min-w-[160px] rounded-lg shadow-lg">
-                      <button className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full">
+                      <button
+                        className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full"
+                        onClick={() => handleOpenFileDetailsModal(file)}
+                      >
                         <Info className="h-4 w-4 text-pink-400" />
                         <span>View Details</span>
                       </button>
@@ -147,7 +165,9 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
                       </button>
                       <button
                         className="px-4 py-2 hover:bg-pink-50 flex items-center space-x-2 text-gray-700 text-sm w-full"
-                        onClick={() => handleOpenModal(file.name, file.id)}
+                        onClick={() =>
+                          handleOpenDeleteModal(file.name, file.id)
+                        }
                       >
                         <Trash2 className="h-4 w-4 text-pink-400" />
                         <span>Delete</span>
@@ -166,9 +186,15 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
       </div>
       {showDeleteModal && (
         <DeleteModal
-          handleCloseModal={handleCloseModal}
+          handleCloseDeleteModal={handleCloseDeleteModal}
           fileName={deleteingFileName}
           fileId={deleteingfileId}
+        />
+      )}
+      {showFileDetailsModal && (
+        <FileDetailsModal
+          file={fileDetails}
+          handleCloseFileDetailsModal={handleCloseFileDetailsModal}
         />
       )}
     </>

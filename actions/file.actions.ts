@@ -118,3 +118,35 @@ export async function deleteFile(fileId: string) {
     return { success: false, error };
   }
 }
+
+export async function renameFile(fileId: string, newFileName: string) {
+  try {
+    const userId = await getDbUserId();
+    if (!userId) throw new Error("User not found!");
+
+    const file = await prisma.file.findUnique({
+      where: {
+        ownerId: userId,
+        id: fileId,
+      },
+    });
+
+    if (!file) throw new Error("File not found!");
+
+    await prisma.file.update({
+      where: {
+        id: fileId,
+        ownerId: userId,
+      },
+      data: {
+        name: newFileName,
+      },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.log("Error updating file", error);
+    return { success: false, error };
+  }
+}

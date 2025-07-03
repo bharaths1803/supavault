@@ -1,24 +1,24 @@
 "use client";
 
 import { deleteFile } from "@/actions/file.actions";
-import { Check, Loader, X } from "lucide-react";
+import { Check, Eye, Loader, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface DeleteModalProps {
-  handleCloseModal: () => void;
+  handleCloseDeleteModal: () => void;
   fileName: string;
   fileId: string;
 }
 
 const DeleteModal = ({
-  handleCloseModal,
+  handleCloseDeleteModal,
   fileName,
   fileId,
 }: DeleteModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const handleDeleteFile = async (fileId: string) => {
+  const handleDeleteFile = async () => {
     try {
       setIsSubmitting(true);
       const res = await deleteFile(fileId);
@@ -28,21 +28,23 @@ const DeleteModal = ({
       toast.error("Deleting failed!");
     } finally {
       setIsSubmitting(false);
-      handleCloseModal();
+      handleCloseDeleteModal();
     }
   };
   return (
     <>
-      <div className="z-40 h-full fixed inset-0 bg-black opacity-50" />
+      <div className="z-40 h-full fixed inset-0 bg-black/50" />
       <div className="flex justify-center items-center fixed inset-0 z-50">
-        <div className="max-w-md bg-pink-50 rounded-xl shadow-xl border border-pink-200 w-full animate-scale">
-          <div className="p-4 flex justify-between items-center border-b border-pink-200">
-            <h2 className="text-gray-900 text-xl font-bold">Delete File</h2>
+        <div className="max-w-md bg-pink-50 rounded-xl shadow-xl border border-pink-200 w-full overflow-hidden animate-scale">
+          <div className="bg-gradient-to-r from-pink-100 to-rose-100 border-b border-pink-200 flex justify-between items-center p-4">
+            <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-600">
+              Delete File
+            </h2>
             <button
-              className="text-pink-500 hover:text-pink-700"
-              onClick={handleCloseModal}
+              className="p-2 rounded-full hover:bg-pink-100 transition-colors"
+              onClick={handleCloseDeleteModal}
             >
-              <X size={20} />
+              <X className="w-5 h-5 text-pink-500" />
             </button>
           </div>
           <p className="text-pink-600 text-lg font-semibold p-4">
@@ -50,25 +52,25 @@ const DeleteModal = ({
           </p>
           <div className="p-4 flex gap-2 items-center">
             <button
-              className="flex flex-1 justify-center items-center text-gray-700 px-4 py-2 rounded-lg border border-pink-200 bg-gray-200 hover:bg-gray-300 mt-4 sm:mt-0"
-              onClick={() => handleCloseModal()}
+              className="w-full flex justify-center items-center space-x-2 px-4 py-2 rounded-lg border border-pink-200 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors"
+              onClick={handleCloseDeleteModal}
             >
-              <X size={18} className="mr-1" />
-              Cancel
+              <X className="h-4 w-4 text-pink-600" />
+              <span className="text-pink-700 font-medium">Cancel</span>
             </button>
             <button
-              className={`flex flex-1 justify-center items-center  px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-lg border border-pink-200 mt-4 sm:mt-0`}
-              onClick={() => handleDeleteFile(fileId)}
-              disabled={isSubmitting}
+              className="w-full flex justify-center items-center space-x-2 px-4 py-2 rounded-lg border border-pink-200 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors"
+              onClick={handleDeleteFile}
             >
               {isSubmitting ? (
                 <>
-                  <Loader size={18} className="animate-spin mr-1" />{" "}
-                  {"Deleting"}
+                  <Loader className="h-4 w-4 text-pink-600" />
+                  <span className="text-pink-700 font-medium">Deleting</span>
                 </>
               ) : (
                 <>
-                  <Check size={18} className="mr-1" /> {"Confirm"}
+                  <Check className="h-4 w-4 text-pink-600" />
+                  <span className="text-pink-700 font-medium">Confirm</span>
                 </>
               )}
             </button>

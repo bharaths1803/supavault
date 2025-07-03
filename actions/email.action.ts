@@ -11,7 +11,7 @@ export async function sendEmail({ to, react, subject }: SendEmailType) {
   try {
     console.log("To", to, subject);
     const data = await resend.emails.send({
-      from: "TidyBin <onboarding@resend.dev>",
+      from: "Supavault <onboarding@resend.dev>",
       to,
       subject,
       react,

@@ -24,10 +24,10 @@ export default function EmailTemplate({
   return (
     <Html>
       <Head />
-      <Preview>TidyBin's OTP Verification</Preview>
+      <Preview>SupaVault's OTP Verification</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
-          <Heading style={styles.title}>TidyBin's OTP Verification</Heading>
+          <Heading style={styles.title}>SupaVault's OTP Verification</Heading>
           <Text style={styles.text}>Hey {username}! 👋</Text>
           <Text style={styles.text}>
             Here’s your one-time password (OTP) to unlock the next step in your
@@ -43,7 +43,7 @@ export default function EmailTemplate({
             maybe do a little dance for extra security 🕺💃).
           </Text>
           <Text style={styles.text}>Stay awesome,</Text>
-          <Text style={styles.heading}>The TidyBin Crew 🛸</Text>
+          <Text style={styles.heading}>The SupaVault Crew 🛸</Text>
         </Container>
       </Body>
     </Html>
