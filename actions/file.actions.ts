@@ -74,7 +74,13 @@ export async function getFiles() {
         size: true,
         path: true,
         name: true,
+        ownerId: true,
         createdAt: true,
+        user: {
+          select: {
+            username: true,
+          },
+        },
         sharedUsers: {
           select: {
             id: true,

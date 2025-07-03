@@ -18,11 +18,12 @@ import {
   UserPlusIcon,
   X,
 } from "lucide-react";
-import { use, useMemo, useState } from "react";
+import { use, useContext, useMemo, useState } from "react";
 import DeleteModal from "./DeleteModal";
 import toast from "react-hot-toast";
 import { renameFile, shareFiles } from "@/actions/file.actions";
 import { searchUsers } from "@/actions/user.action";
+import { AuthContext } from "@/app/_components/AuthContext";
 
 interface FileDetailsModalProps {
   file: FileType | null;
@@ -49,6 +50,7 @@ const FileDetailsModal = ({
   const [searchedUsers, setSearchedUsers] = useState<UserType[]>([]);
   const [selectedSearchedUsers, setSelectedSearchedUsers] =
     useState<UserType[]>(sharedUsers);
+  const { user } = useContext(AuthContext);
 
   const handleCloseDeleteModal = () => {
     setDeleteingFileName("");
@@ -216,9 +218,14 @@ const FileDetailsModal = ({
                       <FileTypeIcon className="h-4 w-4 text-pink-500" />
                       <span>{file.mimeType}</span>
                     </div>{" "}
-                    <div className="text-gray-600 flex items-center space-x-2 text-sm">
+                    <div className="text-gray-600 flex items-start space-x-2 text-sm">
                       <UserIcon className="h-4 w-4 text-pink-500" />
-                      <span>Owned by you</span>
+                      <span>
+                        Owned by{" "}
+                        {file.ownerId === user?.id
+                          ? "you"
+                          : file.user?.username}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -312,7 +319,6 @@ const FileDetailsModal = ({
                   <div className="border border-pink-200 rounded-lg max-h-60 overflow-y-auto">
                     {searchedUsers.map((user, idx) => {
                       const isSelected = isPartOfSelectedUsers(user);
-                      console.log("Is Selected", isSelected, user.username);
                       return (
                         <div
                           className={`p-3 flex items-start justify-between ${isSelected ? "bg-gradient-to-r from-pink-100 to-rose-100" : "bg-white hover:bg-pink-100"} border-b border-pink-200  group `}
@@ -364,6 +370,38 @@ const FileDetailsModal = ({
                       </>
                     )}
                   </button>
+                )}
+
+                {selectedSearchedUsers.length > 0 && (
+                  <div className="mt-3">
+                    <label className="mb-2 text-sm font-medium text-gray-700">
+                      Shared Users
+                    </label>
+                    <div className="border border-pink-200 rounded-lg max-h-60 overflow-y-auto mt-4 space-y-2">
+                      {selectedSearchedUsers.map((user, idx) => {
+                        return (
+                          <div
+                            className="p-3 bg-gradient-to-r from-pink-100 to-rose-100 border-b border-pink-200"
+                            key={user.id}
+                          >
+                            <div className="flex gap-2">
+                              <div className="rounded-full h-10 w-10 bg-gradient-to-br from-pink-600 to-rose-600 text-white font-semibold flex justify-center items-center">
+                                {user.username.charAt(0).toUpperCase()}
+                              </div>
+                              <div className=" space-y-1">
+                                <p className="text-sm text-gray-900 ">
+                                  {user.username}
+                                </p>
+                                <p className="text-gray-600 text-xs">
+                                  {user.email}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

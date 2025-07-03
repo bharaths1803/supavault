@@ -35,4 +35,8 @@ export interface FileType {
   createdAt: Date;
   category: FileCategory;
   sharedUsers: UserType[];
+  ownerId: string | null;
+  user: {
+    username: string;
+  } | null;
 }
