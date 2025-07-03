@@ -103,8 +103,6 @@ const Sidebar = ({
       .then((res) => (res.ok ? res.json() : null))
       .then(setUser)
       .catch(() => setUser(null));
-
-    console.log("USer", user);
   }, []);
 
   return (
