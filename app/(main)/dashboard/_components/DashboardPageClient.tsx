@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Sidebar from "../../_components/Sidebar";
 import { FileCategory, SortCriteria, SortOrder } from "@/types";
 import FileUpload from "./FileUpload";
 import { getFiles } from "@/actions/file.actions";
 import FileGrid from "./FileGrid";
 import Header from "./Header";
+import { AuthContext } from "@/app/_components/AuthContext";
 
 type GetFilesType = Awaited<ReturnType<typeof getFiles>>;
 
@@ -17,6 +18,7 @@ interface DashboardPageClientProps {
 const DashboardPageClient = ({ userFiles }: DashboardPageClientProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<FileCategory>("all");
+  const { user } = useContext(AuthContext);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortingCriteria, setSortingCriteria] = useState<SortCriteria>("date");
