@@ -98,8 +98,6 @@ export async function getFiles() {
 
     const totalSize = files.reduce((s, file) => s + Number(file.size), 0);
 
-    console.log("Files", filesWithCategory);
-
     return { files: filesWithCategory, totalSize };
   } catch (error) {
     console.log("Error in get files action", error);
