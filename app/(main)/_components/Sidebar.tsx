@@ -14,7 +14,13 @@ import {
   Loader2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
 
 interface SidebarProps {
@@ -91,6 +97,16 @@ const Sidebar = ({
     }
     setLoggingout(false);
   };
+
+  useEffect(() => {
+    fetch("/api/me", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then(setUser)
+      .catch(() => setUser(null));
+
+    console.log("USer", user);
+  }, []);
+
   return (
     <>
       {isMobileMenuOpen && (
