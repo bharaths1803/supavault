@@ -1,25 +1,29 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-interface SendEmailType {
+interface SendEmailOptions {
   to: string;
-  react: any;
   subject: string;
+  html: string;
 }
 
-export async function sendEmail({ to, react, subject }: SendEmailType) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  try {
-    console.log("To", to, subject);
-    const data = await resend.emails.send({
-      from: "Supavault <onboarding@resend.dev>",
-      to,
-      subject,
-      react,
-    });
+export async function sendEmail({ to, subject, html }: SendEmailOptions) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "bharaths14051803@gmail.com",
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
 
-    console.log("Data in send email", data);
-  } catch (error) {
-    console.log("Error in sending email", error);
-    return { success: false, error };
-  }
+  const info = await transporter.sendMail({
+    from: '"SupaVault" <bharaths14051803@gmail.com>',
+    to,
+    subject,
+    html,
+  });
+
+  console.log("Message sent: %s", info.messageId);
 }

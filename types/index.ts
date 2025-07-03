@@ -34,4 +34,5 @@ export interface FileType {
   name: string;
   createdAt: Date;
   category: FileCategory;
+  sharedUsers: UserType[];
 }

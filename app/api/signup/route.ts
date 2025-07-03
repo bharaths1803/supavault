@@ -2,6 +2,7 @@ import { sendEmail } from "@/actions/email.action";
 import EmailTemplate from "@/emails/Template";
 import prisma from "@/lib/prisma";
 import { generateOtp } from "@/lib/utils";
+import { render } from "@react-email/render";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -21,13 +22,17 @@ export async function POST(req: NextRequest) {
 
   const otp = generateOtp();
 
+  const htmlContent = await render(
+    EmailTemplate({
+      username: username,
+      otp,
+    })
+  );
+
   await sendEmail({
     to: email,
     subject: "🚀Your Magic Code Has Arrived!",
-    react: EmailTemplate({
-      username,
-      otp,
-    }),
+    html: htmlContent,
   });
 
   await prisma.oTP.deleteMany({
@@ -41,7 +46,6 @@ export async function POST(req: NextRequest) {
     data: {
       username,
       email,
-      status: "PENDING",
       attempts: 0,
       otp,
     },

@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteFile, getFiles } from "@/actions/file.actions";
-import { FileType } from "@/types";
+import { FileCategory, FileType } from "@/types";
 import {
   Archive,
   Download,
@@ -103,6 +103,17 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
     setShowFileDetailsModal(true);
   };
 
+  const getCategoryStyle = (category: FileCategory): string => {
+    const categoryMap = {
+      images: "bg-pink-100 text-pink-800",
+      media: "bg-rose-100 text-rose-800",
+      documents: "bg-pink-100 text-pink-700",
+      others: "bg-pink-50 text-pink-600",
+      all: "bg-pink-50 text-pink-600",
+    };
+    return categoryMap[category];
+  };
+
   return (
     <>
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -180,6 +191,14 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
                 <p>{formatFileSize(file.size)}</p>
                 <p>{new Date(file.createdAt).toDateString()}</p>
               </div>
+              <div className="mt-3">
+                <span
+                  className={`px-2 py-1 rounded-full inline-flex justify-center items-center text-xs font-medium ${getCategoryStyle(file.category)}`}
+                >
+                  {file.category.charAt(0).toUpperCase() +
+                    file.category.slice(1, -1)}
+                </span>
+              </div>
             </div>
           </div>
         ))}
@@ -191,10 +210,11 @@ const FileGrid = ({ userFiles }: FileGridProps) => {
           fileId={deleteingfileId}
         />
       )}
-      {showFileDetailsModal && (
+      {showFileDetailsModal && fileDetails && (
         <FileDetailsModal
           file={fileDetails}
           handleCloseFileDetailsModal={handleCloseFileDetailsModal}
+          sharedUsers={fileDetails.sharedUsers}
         />
       )}
     </>
