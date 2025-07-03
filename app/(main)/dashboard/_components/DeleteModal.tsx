@@ -64,7 +64,7 @@ const DeleteModal = ({
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 text-pink-600" />
+                  <Loader2 className="h-4 w-4 text-pink-600 animate-spin" />
                   <span className="text-pink-700 font-medium">Deleting</span>
                 </>
               ) : (
