@@ -36,7 +36,7 @@ export interface FileType {
   category: FileCategory;
   sharedUsers: UserType[];
   ownerId: string | null;
-  user: {
+  owner: {
     username: string;
   } | null;
 }

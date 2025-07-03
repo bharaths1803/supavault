@@ -76,7 +76,7 @@ export async function getFiles() {
         name: true,
         ownerId: true,
         createdAt: true,
-        user: {
+        owner: {
           select: {
             username: true,
           },

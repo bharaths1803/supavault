@@ -224,7 +224,7 @@ const FileDetailsModal = ({
                         Owned by{" "}
                         {file.ownerId === user?.id
                           ? "you"
-                          : file.user?.username}
+                          : file.owner?.username}
                       </span>
                     </div>
                   </div>

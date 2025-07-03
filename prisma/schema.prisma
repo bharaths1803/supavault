@@ -33,7 +33,7 @@ model File {
   size     Int
   mimeType String
 
-  user    User?   @relation("OwnedFiles", fields: [ownerId], references: [id])
+  owner   User?   @relation("OwnedFiles", fields: [ownerId], references: [id])
   ownerId String?
 
   sharedUsers User[] @relation("SharedFiles")
